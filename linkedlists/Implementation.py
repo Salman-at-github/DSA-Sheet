@@ -1,81 +1,115 @@
 class Node:
     def __init__(self, data):
-        # Node constructor to initialize a node with data and a reference to the next node
         self.data = data
         self.next_node = None
+    
 
 class LinkedList:
     def __init__(self):
-        # LinkedList constructor to initialize an empty linked list with a head node
-        self.head = None
-
+        self.head_node = None
+    
     def is_empty(self):
-        # Check if the linked list is empty
-        return self.head is None
-
-    def append(self, data):
-        # Append a new node with the given data to the end of the linked list
+        return self.head_node is None
+    
+    def add_item(self, data):
         new_node = Node(data)
-        if self.is_empty():
-            self.head = new_node
-        else:
-            current_node = self.head
+        # if LL is empty, add node as head
+        if  self.is_empty():
+            self.head_node = new_node
+        else: #else traverse the LL and add node to end
+            current_node = self.head_node
             while current_node.next_node:
                 current_node = current_node.next_node
+            
+            # once traverse is complete, we're at the end of the LL so add node here
             current_node.next_node = new_node
-
-    def prepend(self, data):
-        # Add a new node with the given data to the beginning of the linked list
-        new_node = Node(data)
-        new_node.next_node = self.head
-        self.head = new_node
-
-    def delete(self, data):
-        # Delete the first occurrence of a node with the given data
+    
+    def print_items(self):
+        """
+            Show all items
+        """
         if not self.is_empty():
-            if self.head.data == data:
-                self.head = self.head.next_node
+            current_node = self.head_node
+            while current_node:
+                print(current_node.data, end="-->")
+                current_node = current_node.next_node
+            print("None")
+        else:
+            print("No items to show")
+    
+    def add_head(self, data):
+        """
+            Insert element at the beginning O(1)
+        """
+        new_node = Node(data)
+        new_node.next_node = self.head_node
+        self.head_node = new_node
+    
+    def delete_item(self, data):
+        if not self.is_empty():
+            # Check if the head node contains the data to be deleted
+            if self.head_node.data == data:
+                self.head_node = self.head_node.next_node
             else:
-                current_node = self.head
+                current_node = self.head_node
+                # Traverse the list to find the node with the specified data
                 while current_node.next_node and current_node.next_node.data != data:
                     current_node = current_node.next_node
-
-                if current_node.next_node:
+                
+                # Check if the data is found and delete the node if so
+                if current_node.next_node and current_node.next_node.data == data:
                     current_node.next_node = current_node.next_node.next_node
+                else:
+                    print(f"Data {data} not found in the list.")
+        else:
+            print("List is empty already!")
 
-    def display(self):
-        # Display the elements of the linked list
-        elements = []
-        current_node = self.head
-        while current_node:
-            elements.append(current_node.data)
+    def get_length(self):
+        if not self.is_empty():
+            iter = 1
+            current_node = self.head_node
+            while current_node.next_node:
+                current_node = current_node.next_node
+                iter += 1
+            return iter
+
+    def insert_at(self, data, index):
+        new_node = Node(data)
+
+        if index == 0:
+            self.add_head(new_node)
+
+        iter = 0
+        current_node = self.head_node
+        while current_node.next_node and iter < (index - 1):
             current_node = current_node.next_node
-        print("Linked List:", elements)
-
-# Usage example:
-my_linked_list = LinkedList()
-
-# Append elements to the linked list
-my_linked_list.append(1)
-my_linked_list.append(2)
-my_linked_list.append(3)
-
-# Display the linked list
-my_linked_list.display()
-
-# Prepend an element to the linked list
-my_linked_list.prepend(0)
-
-# Display the updated linked list
-my_linked_list.display()
-
-# Delete an element from the linked list
-my_linked_list.delete(2)
-
-# Display the final linked list
-my_linked_list.display()
+            iter += 1
+                
+        if iter != index - 1:
+            print("Index out of bounds")
+            return
+        new_node.next_node = current_node.next_node
+        current_node.next_node = new_node
+        
 
 
+
+
+myLL = LinkedList()
+myLL.add_item(5)
+myLL.add_item(10)
+myLL.add_item(12)
+myLL.add_item(13)
+myLL.add_item(14)
+myLL.add_head(100)
+# myLL.print_items()
+# myLL.delete_item(12)
+myLL.print_items()
+
+myLL.insert_at(99, 2)
+res = myLL.get_length()
+myLL.print_items()
+print("Size is ", res)
 #                                               USES
 
 # 1. LRU Cache (Least Recently Used Cache):

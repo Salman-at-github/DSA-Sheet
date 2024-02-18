@@ -25,7 +25,7 @@ res = get_pair([1, 2, 3, 4, 5, 6], 3)
 print(res)
 
 #SORTING
-#T: O(logn)
+#T: O(nlogn)
 #S: O(1)
 
 def get_pair_sort(arr, t):

@@ -8,7 +8,7 @@ class Queue:
         return len(self.items) == 0
 
     def enqueue(self, item):
-        # Add an element to the rear of the queue
+        # Add an element to the end of the queue
         self.items.append(item)
 
     def dequeue(self):

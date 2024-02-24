@@ -1,38 +1,35 @@
-# Define the directions to move: Down, Left, Right, Up
-direction = "DLRU"
-
-# Define the changes in row and column for each direction
+directions = "DLRU"
 dr = [1, 0, 0, -1]
 dc = [0, -1, 1, 0]
 
-# Check if the move is within the bounds of the maze and the cell is not blocked (1)
-def is_valid_move(r, c, n, maze):
-    return 0 <= r < n and 0 <= c < n and maze[r][c] == 1
+def is_valid_move(r, c, n, maze ):
+    return 0 <= r < n and 0 <= c <= n and maze[r][c] == 1
 
-# Recursively find a path from (r, c) to the destination in the maze
-def find_path(r, c, maze, n, ans, current_path):
-    # If the rat reaches the destination, add the current path to the list of paths
-    if r == n - 1 and c == n - 1:
-        ans.append(current_path[:])
+
+def find_path(r, c, n, maze, result_arr, current_path):
+    # if its the destination, add path to result
+    if r == n-1 and c == n-1:
+        result_arr.append(current_path[:])
         return
-
-    # Mark the current cell as visited
+    
+    # else check for all moves, start by marking current cell as visited
     maze[r][c] = 0
+    for i in range(len(directions)):
+        next_r = r + dr[i]
+        next_c = c + dc[i]
+        # check if next moves are valid
+        if is_valid_move(next_r, next_c, n, maze):
+            #add its direction to current path if valid
+            current_path.append(directions[i])
+            # recursively check next moves too
+            find_path(next_r, next_c, n, maze, result_arr, current_path)
 
-    # Explore each possible move
-    for i in range(4):
-        nextr = r + dr[i]
-        nextc = c + dc[i]
-        if is_valid_move(nextr, nextc, n, maze):
-            # Append the current direction to the path
-            current_path.append(direction[i])
-            # Recursive call for the next move
-            find_path(nextr, nextc, maze, n, ans, current_path)
-            # Backtrack by removing the last direction
+            # backtrack the prev move once recursion is exited due to any reason
             current_path.pop()
-
-    # Mark the current cell as unvisited when backtracking
+    
+    # unmark the current cell so that we can backtrack if any other paths are available
     maze[r][c] = 1
+
 
 if __name__ == "__main__":
     # Define the maze as a 2D list
@@ -47,16 +44,17 @@ if __name__ == "__main__":
     n = len(maze)
 
     # Initialize variables for result and current path
-    result = []
+    result_arr = []
     current_path = []
 
     # Start the backtracking from the source (0, 0) with an empty path
-    find_path(0, 0, maze, n, result, current_path)
+    find_path(0, 0, n, maze, result_arr, current_path)
 
     # Display the result
-    if not result:
+    if not result_arr:
         print(-1)
     else:
-        for path in result:
+        for path in result_arr:
             print("".join(path), end=" ")
         print()
+
